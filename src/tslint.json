@@ -1,0 +1,28 @@
+{
+    "rules": {
+      "no-unused-variable": [
+        true
+      ],
+      "semicolon": [
+        true
+      ],
+      "class-name": true,
+      "array-type": [
+        "array"
+      ],
+      "curly": true,
+      "use-isnan": true,
+      "no-conditional-assignment": true,
+      "indent": [
+        true
+      ],
+      "no-shadowed-variable": true,
+      "radix": true,
+      "no-duplicate-variable": true,
+      "no-construct": true,
+      "component-class-suffix": true,
+      "cyclomatic-complexity": [
+        true
+      ]
+    }
+}

@@ -1,0 +1,104 @@
+<html>
+<head>
+    <script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
+    <script type="text/javascript">
+        // var lastRequestedFrame = null;
+        // function draw(x, ctx) {
+        //     if (lastRequestedFrame) {
+        //         window.cancelAnimationFrame(lastRequestedFrame);
+        //     }
+        //     lastRequestedFrame = window.requestAnimationFrame(() => {
+        //         ctx.clearRect(0, 0, 400, 100);
+        //         ctx.fillStyle = 'blue';
+        //         ctx.fillRect(0, 0, x, 100);
+        //     }) 
+        // }
+        // window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        // var context = new AudioContext();
+        // window.onload = (() => {
+        //     console.log('hello')  
+        //     var c = document.getElementById("canvas");
+        //     var ctx = c.getContext("2d");
+        //     draw(1, ctx);
+        //     window.ctx = ctx;
+        // })
+        // navigator.mediaDevices.getUserMedia({
+        //     audio: true
+        // }).then(stream => {
+        //     console.log('streaming', stream)
+        //     // var recordRTC = RecordRTC(stream);
+        //     // recordRTC.startRecording();
+        //     // setTimeout(() => {
+        //     // recordRTC.stopRecording(function(audioURL) {
+        //     //     var recordedBlob = recordRTC.getBlob();
+        //     //     console.log(recordedBlob)
+        //     //     window.blob = recordedBlob
+        //     // });
+        //     // }, 3000)
+        //     var mic = context.createMediaStreamSource(stream);
+        //     var script = context.createScriptProcessor(2048, 1, 1);
+        //     var that = {};
+        //     // var stop = false;
+        //     // setTimeout(() => stop = true, 2000)
+        //     var max = 0.000001;
+        //     var count = 0;
+        //     var lastTime = Date.now();
+        //     console.log('activated')
+        //     script.onaudioprocess = function(event) {
+        //         var input = event.inputBuffer.getChannelData(0);
+        //         var i;
+        //         var sum = 0.0;
+        //         var clipcount = 0;
+        //         for (i = 0; i < input.length; ++i) {
+        //         sum += input[i] * input[i];
+        //         if (Math.abs(input[i]) > 0.99) {
+        //             clipcount += 1;
+        //         } 
+        //         }
+        //         that.instant = Math.sqrt(sum / input.length);
+        //         if (that.instant > 0.1 && (Date.now() - lastTime) > 1200) {
+        //             console.log('count', count++, new Date())
+        //             lastTime = Date.now()
+        //         }
+        //         // that.slow = 0.95 * that.slow + 0.05 * that.instant;
+        //         // that.clip = clipcount / input.length;
+        //         // if (!stop) {
+        //         if (max < that.instant) { max = that.instant; }
+        //         draw((that.instant / max) * 400, ctx)
+        //         // console.log(that, (that.instant) * 400)
+        //         // }
+        //     };
+        //     function connectToSource (stream, callback) {
+        //         console.log('SoundMeter connecting');
+        //         try {
+        //             mic = context.createMediaStreamSource(stream);
+        //             mic.connect(script);
+        //             // necessary to make sample run, but should not be.
+        //             script.connect(context.destination);
+        //             if (typeof callback !== 'undefined') {
+        //                 callback(null);
+        //             }
+        //         } catch (e) {
+        //             console.error(e);
+        //             if (typeof callback !== 'undefined') {
+        //             callback(e);
+        //             }
+        //         }
+        //     };
+        //     connectToSource(stream);
+        // });
+    </script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <!--<audio id="recording"></audio>-->
+    <canvas id="canvas" width=400 height=100 style="border:1px solid #000000;"></canvas>
+</body>
+<style src="assets/bundle.css"></style>
+<script src="assets/bundle.js"></script>
+
+</html>
+
+
+

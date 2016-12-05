@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "moduleResolution": "node",
+        "noEmitOnError": false,
+        "module": "commonjs",
+        "outDir": "../built",
+        "sourceRoot": "../src",
+        "inlineSourceMap": true,
+        "experimentalDecorators": true,
+        "jsx": "preserve"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

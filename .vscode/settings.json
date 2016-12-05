@@ -1,0 +1,9 @@
+{
+    "editor.renderWhitespace": "all",
+    "editor.tabSize": 2,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.format.enable": true,
+    "typescript.validate.enable": true
+    
+
+}

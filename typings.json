@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "bluebird": "registry:npm/bluebird#3.4.1+20160909132857",
+    "express": "registry:npm/express#4.14.0+20160925001530",
+    "material-ui": "registry:npm/material-ui#0.15.1+20160817172421",
+    "react-dom": "registry:npm/react-dom#15.0.1+20160826174104",
+    "react-redux": "registry:npm/react-redux#4.4.0+20160614222153",
+    "webpack": "registry:npm/webpack#1.12.9+20160418172948"
+  },
+  "globalDependencies": {
+    "node": "registry:dt/node#6.0.0+20161110151007",
+    "react": "registry:dt/react#0.14.0+20161203201537",
+    "react-tap-event-plugin": "registry:dt/react-tap-event-plugin#0.0.0+20160602142434"
+  }
+}
