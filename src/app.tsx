@@ -9,10 +9,11 @@ import Paper from 'material-ui/Paper';
 import { Card } from 'material-ui/Card';
 import { CardHeader, CardText } from 'material-ui/Card';
 import AppBar from 'material-ui/AppBar';
+import {List, ListItem} from 'material-ui/List';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import * as recordrtc from 'recordrtc';
 import { SoundBar } from './components/SoundBar';
-import { connect, store, GlobalState } from './redux/store';
+import { connect, store, GlobalState, BarkCount } from './redux/store';
 import { Provider } from 'react-redux';
 
 require('../style/default.styl');
@@ -22,12 +23,14 @@ injectTapEventPlugin();
 const theme = getMuiTheme(lightBaseTheme)
 
 interface AppProps {
-
+  counts?: BarkCount[];
 }
 
 @connect<AppProps>(
   (state, ownProps) => {
-    return {};
+    return {
+      counts: state.default.barkcounts
+    };
   },
   (dispatch, ownProps) => {
     return ownProps;
@@ -59,6 +62,21 @@ class App extends React.Component<AppProps, {}> {
               renderVertical={false}
               renderValue={false}
               />
+            <CardHeader>{this.props.counts.length}</CardHeader>
+            <List>
+              {
+                this.props.counts.map(c => {
+                  return (
+                    <ListItem>
+                    {Math.round(c.volume * 1000000)/1000000} at {c.timestamp.toLocaleTimeString()}
+                    <audio controls>
+                      <source src={c.data}/>
+                    </audio>
+                    </ListItem>
+                  )
+                })
+              }
+            </List>
           </Card>
         </Paper>
         <Paper style={{ margin: 'auto', width: 800 }}>
