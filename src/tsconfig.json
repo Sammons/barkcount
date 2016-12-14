@@ -1,14 +1,17 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es5",
         "moduleResolution": "node",
         "noEmitOnError": false,
         "module": "commonjs",
         "outDir": "../built",
         "sourceRoot": "../src",
         "inlineSourceMap": true,
+        "lib": [
+           "dom", "es2015.promise", "es2015"
+        ],
         "experimentalDecorators": true,
-        "jsx": "preserve"
+        "jsx": "react"
     },
     "exclude": [
         "node_modules"

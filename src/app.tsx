@@ -9,16 +9,15 @@ import Paper from 'material-ui/Paper';
 import { Card } from 'material-ui/Card';
 import { CardHeader, CardText } from 'material-ui/Card';
 import AppBar from 'material-ui/AppBar';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 import * as recordrtc from 'recordrtc';
 import { SoundBar } from './components/SoundBar';
-import { connect, store, GlobalState, BarkCount } from './redux/store';
+import { connect, store, GlobalState } from './redux/store';
 import { Provider } from 'react-redux';
+import { BarkCount } from './redux/defaultStore';
 
 require('../style/default.styl');
-
-injectTapEventPlugin();
 
 const theme = getMuiTheme(lightBaseTheme)
 
@@ -49,12 +48,12 @@ class App extends React.Component<AppProps, {}> {
           //   marginBottom: 50,
           //   textAlign: 'top'
           // }}
-          title={'Welcome'}>
+          title={'How loud is your dog?'}>
         </AppBar>
         <Paper style={{ margin: 'auto', width: 800 }}  >
           <Card style={{ height: 800 }} >
             <CardText>
-              Whenever we see sound louder than what you pick, we'll record when it happened and how loud it seemed to be; note that raw the loudness numbers are mic specific.
+
             </CardText>
             <SoundBar
               width={800} height={100}
@@ -65,13 +64,16 @@ class App extends React.Component<AppProps, {}> {
             <CardHeader>{this.props.counts.length}</CardHeader>
             <List>
               {
-                this.props.counts.map(c => {
+                this.props.counts.map((c, i) => {
                   return (
-                    <ListItem>
-                    {Math.round(c.volume * 1000000)/1000000} at {c.timestamp.toLocaleTimeString()}
-                    <audio controls>
-                      <source src={c.data}/>
-                    </audio>
+                    <ListItem key={i} >
+                      <span style={{ paddingRight: 10 }}>{i}</span>
+                      {Math.round(c.volume * 1000000) / 1000000} at {c.timestamp.toLocaleTimeString()}
+                      {c.data &&
+                      <audio controls>
+                        <source src={c.data} />
+                      </audio>
+                      }
                     </ListItem>
                   )
                 })
@@ -89,14 +91,17 @@ class App extends React.Component<AppProps, {}> {
     );
   }
 }
-
+if (!window['tapInjected']) {
+  window['tapInjected'] = true;
+  injectTapEventPlugin();
+}
 ReactDOM.render(
   <MuiThemeProvider muiTheme={theme}>
     <Provider store={store}>
       <App />
     </Provider>
   </MuiThemeProvider>,
-  document.getElementById('root'));
+  document['getElementById']('root'));
 
 /** required for HMR */
 if (module['hot']) {

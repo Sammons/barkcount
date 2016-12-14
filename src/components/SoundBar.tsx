@@ -31,6 +31,7 @@ export interface SoundBarProps {
 export class SoundBar extends React.Component<SoundBarProps, {}> {
   constructor(public props: SoundBarProps) {
     super(props);
+    console.log('constructed ')
     SoundService.subscribeToVolumeChange(this.soundVolumeChangeHandler);
   }
 

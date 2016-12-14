@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   cache: true,
   entry: {
-    bundle: ['webpack-hot-middleware/client', path.join(__dirname, '../built/app.jsx')]
+    bundle: ['webpack-hot-middleware/client', path.join(__dirname, '../built/app.js')]
   },
   output: {
     path: path.resolve(__dirname, '../dist/assets'),
@@ -15,7 +15,7 @@ module.exports = {
     loaders: [
       {
         test: /\.js(x?)$/,
-        loader: 'babel-loader?cacheDirectory=true&presets[]=es2015&presets[]=react&presets[]=react-hmre',
+        loader: 'babel-loader?cacheDirectory=true&presets[]=react-hmre',
         include: [path.resolve(__dirname, '../built')],
       },
       {
