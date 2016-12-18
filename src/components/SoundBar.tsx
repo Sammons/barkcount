@@ -1,11 +1,14 @@
+import { Dispatch } from 'redux';
 import * as React from 'react';
-import { SoundService } from '../services/SoundService';
+import * as soundStore from '../redux/soundSubscriptionStore';
+import { connect } from '../redux/store';
+import * as uuid from 'uuid';
 
-export interface SoundBarProps {
+export interface ComponentProps {
   /** internal canvas style */
   canvasStyle?: React.CSSProperties,
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   /** update max volume when value higher than max observed */
   relativeMaxVolume?: boolean;
   /** default renders horizontal, set true to make vertical */
@@ -26,21 +29,39 @@ export interface SoundBarProps {
   textPosition?: { x: number; y: number; }
   /** flip */
   flip?: boolean;
+  /** subscription */
+  subscriptions?: {[id: string]: number};
+  /** to hook into the volume change handler */
+  onVolumeChange?: (volume: number) => void;
 }
 
-export class SoundBar extends React.Component<SoundBarProps, {}> {
-  constructor(public props: SoundBarProps) {
+type ComponentDispatchers = {
+  /** set subscription */
+  updateSubscription?: (canvasId: string, prevSubscription: number, cb: (volume: number) => void) => void
+}
+type Props = ComponentProps & ComponentDispatchers;
+
+@connect<Props>(
+  (state, ownProps): Partial<ComponentProps> => {
+    return {
+      subscriptions: state.soundSubscriptions.subscriptions
+    };
+  },
+  (dispatch, ownProps): ComponentDispatchers => {
+    return {
+      updateSubscription: soundStore.setSubscription
+    };
+  })
+export class SoundBar extends React.Component<Props, {}> {
+  constructor(public props: Props) {
     super(props);
-    console.log('constructed ')
-    SoundService.subscribeToVolumeChange(this.soundVolumeChangeHandler);
   }
 
-  canvasId = Date.now() + '_canvas';
-  soundService: SoundService;
   maxVolume = this.props.maxVolume || (this.props.relativeMaxVolume ? 0.01 : 0.5);
+
+  canvasId = uuid.v4() + '_canvas';
   private canvas: HTMLCanvasElement;
   private canvasContext: CanvasRenderingContext2D;
-
   getCanvas(): Promise<HTMLCanvasElement> {
     return new Promise((resolve) => {
       if (!this.canvas) {
@@ -61,7 +82,7 @@ export class SoundBar extends React.Component<SoundBarProps, {}> {
         this.lastRequestedFrame = window.requestAnimationFrame(() => {
           this.canvasContext.clearRect(0, 0, this.props.width, this.props.height);
           this.canvasContext.fillStyle = this.props.fillColor || 'blue';
-          const value = volume / (this.props.maxVolume || 0.5) * (this.props.renderVertical ? this.props.height :this.props.width);
+          const value = volume / (this.props.maxVolume || 0.5) * (this.props.renderVertical ? this.props.height : this.props.width);
           if (!this.props.flip) {
             if (this.props.renderVertical) {
               this.canvasContext.fillRect(0, this.props.height - value, this.props.width, this.props.height);
@@ -83,9 +104,9 @@ export class SoundBar extends React.Component<SoundBarProps, {}> {
               this.canvasContext.font = this.props.textFont;
             }
             if (!this.props.textPosition) {
-              this.canvasContext.fillText(Math.floor(volume * 100000)/100000 + '', 50, 50, this.props.width - 50);
+              this.canvasContext.fillText(Math.floor(volume * 100000) / 100000 + '', 50, 50, this.props.width - 50);
             } else {
-              this.canvasContext.fillText(Math.floor(volume * 100000)/100000 + '', this.props.textPosition.x, this.props.textPosition.y, this.props.width - this.props.textPosition.x);
+              this.canvasContext.fillText(Math.floor(volume * 100000) / 100000 + '', this.props.textPosition.x, this.props.textPosition.y, this.props.width - this.props.textPosition.x);
             }
           }
         })
@@ -100,10 +121,15 @@ export class SoundBar extends React.Component<SoundBarProps, {}> {
     if (this.props.relativeMaxVolume) {
       if (this.maxVolume <= volume) { this.maxVolume = volume; }
     }
+    if (this.props.onVolumeChange) {
+      this.props.onVolumeChange(volume)
+    }
     this.draw(volume);
   }
 
   render() {
+    this.props.updateSubscription(
+      this.canvasId, this.props.subscriptions[this.canvasId], this.soundVolumeChangeHandler);
     return (
       <canvas
         id={this.canvasId}

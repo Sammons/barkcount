@@ -1,8 +1,7 @@
 import * as React from 'react';
 const RecordRTC = require('recordrtc');
 const subKey = 'bark_subscriptions'
-import { store } from '../redux/store';
-import { incrementCount, updateCounts } from '../redux/defaultStore';
+import { incrementCount } from '../redux/defaultStore';
 
 export class SoundService {
   static subscriberCounter = 0;
@@ -118,22 +117,22 @@ function getSnippet(length: number) {
   return existingSnippet;
 }
 
-var handling = false;
-SoundService.subscribeToVolumeChange((v: number) => {
-  if (handling) { return; }
-  handling = true;
-  if (v > 0.1 && (Date.now() - lastTimestamp) > 5000) {
-    lastTimestamp = Date.now();
-    var count = {
-        volume: v,
-        timestamp: new Date(),
-        data: null
-    }
-    getSnippet(5000).then(snippet => {
-      count.data = snippet
-      store.dispatch(updateCounts())
-    })
-    store.dispatch(incrementCount(count))
-  }
-  handling = false;
-})
+// var handling = false;
+// SoundService.subscribeToVolumeChange((v: number) => {
+//   if (handling) { return; }
+//   handling = true;
+//   if (v > 0.1 && (Date.now() - lastTimestamp) > 5000) {
+//     lastTimestamp = Date.now();
+//     var count = {
+//         volume: v,
+//         timestamp: new Date(),
+//         data: null
+//     }
+//     getSnippet(5000).then(snippet => {
+//       count.data = snippet
+//       store.dispatch(updateCounts())
+//     })
+//     store.dispatch(incrementCount(count))
+//   }
+//   handling = false;
+// })
