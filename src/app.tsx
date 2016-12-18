@@ -18,7 +18,7 @@ import { connect, store, GlobalState } from './redux/store';
 import { Provider } from 'react-redux';
 import { BarkCount } from './redux/defaultStore';
 import { SoundVolumeText } from './components/SoundVolumeText';
-
+import { SoundScale } from './components/SoundScale';
 require('../style/default.styl');
 
 const theme = getMuiTheme(lightBaseTheme)
@@ -94,10 +94,19 @@ class App extends React.Component<AppProps, {}> {
                 backgroundColor: 'grey',
               }}
               />
-            <div style={{ paddingLeft: 25, paddingTop: 25, width: 155}}>
-              <RaisedButton style={{marginBottom: 10, width: 130}}>Start</RaisedButton>
-              <RaisedButton style={{marginBottom: 10, width: 130}}>Reset</RaisedButton>
-              <RaisedButton style={{width: 130}}>Share</RaisedButton>
+            <div style={{ paddingLeft: 25, paddingTop: 25, width: 155, display: 'inline-block' }}>
+              <RaisedButton style={{ marginBottom: 10, width: 130 }}>Start</RaisedButton>
+              <RaisedButton style={{ marginBottom: 10, width: 130 }}>Reset</RaisedButton>
+              <RaisedButton style={{ width: 130 }}>Share</RaisedButton>
+            </div>
+            <div style={{width: 595, display: 'inline-block'}}>
+              <SoundScale max={0.1} style={{
+                display: 'inline-block',
+                position: 'relative',
+                top: -127,
+                width: 595,
+                borderTop: '1px solid black'
+              }} />
             </div>
 
             <List>
