@@ -1,3 +1,4 @@
+import { Snippet } from '../latent/InterleavingRecorder';
 import { ReducerTemplate } from './helpers/reducerHelpers';
 
 enum ActionTypes {
@@ -5,33 +6,27 @@ enum ActionTypes {
   updateCount
 }
 
-export interface BarkCount {
-  volume: number;
-  timestamp: Date;
-  data: string;
-}
-
 export interface DefaultStoreState {
-  barkcounts: BarkCount[];
+  barks: Snippet[];
   maxVolume: number;
 }
 
 const defaultTemplate = new ReducerTemplate(/** default state */{
-  barkcounts: [] as BarkCount[],
+  barks: [] as Snippet[],
   maxVolume: 0 as number
 })
 
-interface IncrementCountDispatchType { type: number; count: BarkCount }
+interface IncrementCountDispatchType { type: number; snip: Snippet }
 defaultTemplate.addReducer((state, action: IncrementCountDispatchType) => {
   return defaultTemplate.assign(state, {
-    barkcounts: state.barkcounts.concat(action.count),
+    barks: state.barks.concat(action.snip),
   });
 }, ActionTypes.increment);
 
-export const incrementCount = (count: BarkCount): IncrementCountDispatchType => {
+export const addRecording = (snip: Snippet): IncrementCountDispatchType => {
   return {
     type: ActionTypes.increment,
-    count
+    snip
   }
 }
 

@@ -1,3 +1,4 @@
+import { getNumFormat } from './Helpers';
 import { connect } from '../redux/store';
 import * as React from 'react';
 import * as uuid from 'uuid';
@@ -18,6 +19,8 @@ type ComponentProps = {
   /** constrain precision. */
   decimals?: number;
   subscriptions?: { [id: string]: number };
+  /** normalize by max observed to be out of 100 */
+  relative: boolean;
 }
 
 type ComponentDispatchers = {
@@ -56,32 +59,16 @@ export class SoundVolumeText extends React.Component<Props, {}> {
   }
 
   lastRequestedFrame = null;
+  max = 0;
   draw(volume: number) {
-    if (Number.isFinite(this.props.decimals)) {
-      const pow = Math.pow(10, this.props.decimals);
-      volume = Math.round(pow * volume) / pow;
+    let fmt = getNumFormat(this.props.digits, this.props.decimals)
+    if (this.props.relative && volume > this.max) {
+      this.max = volume;
     }
-
-    let volumeStr: string = volume + '';
-    if (Number.isFinite(this.props.digits)) {
-      let decimalIndx = volumeStr.indexOf('.');
-      let digits = decimalIndx > -1 ? decimalIndx : volumeStr.length;
-      if (digits < this.props.digits) {
-        volumeStr = "0".repeat(this.props.digits - digits) + volumeStr;
-      }
+    if (this.props.relative) {
+      volume = (volume / this.max) * 100
     }
-
-    if (Number.isFinite(this.props.decimals)) {
-      let decimalIndx = volumeStr.indexOf('.');
-      let decimals = decimalIndx > -1 ? volumeStr.length - decimalIndx : 0;
-      if (decimalIndx === -1) {
-        volumeStr += "."
-      }
-      if (decimals < this.props.decimals) {
-        volumeStr = volumeStr + "0".repeat(this.props.decimals - decimals);
-      }
-    }
-
+    let txt = fmt(volume);
     this.getCanvas().then(() => {
       if (this.canvasContext) {
         if (this.lastRequestedFrame) {
@@ -91,7 +78,7 @@ export class SoundVolumeText extends React.Component<Props, {}> {
           this.canvasContext.font = this.props.textFont;
           this.canvasContext.fillStyle = this.props.textColor;
           this.canvasContext.clearRect(0, 0, this.props.width, this.props.height);
-          this.canvasContext.fillText(volumeStr, 0, this.props.height, this.props.width)
+          this.canvasContext.fillText(txt, 40, this.props.height, this.props.width)
         })
       }
     });

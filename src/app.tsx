@@ -1,4 +1,5 @@
 /// <reference path="../typings/index.d.ts" />
+import { InterleavingRecorder, Snippet } from './latent/InterleavingRecorder';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as redux from 'redux';
@@ -16,7 +17,6 @@ import * as recordrtc from 'recordrtc';
 import { SoundBar } from './components/SoundBar';
 import { connect, store, GlobalState } from './redux/store';
 import { Provider } from 'react-redux';
-import { BarkCount } from './redux/defaultStore';
 import { SoundVolumeText } from './components/SoundVolumeText';
 import { SoundScale } from './components/SoundScale';
 require('../style/default.styl');
@@ -24,14 +24,14 @@ require('../style/default.styl');
 const theme = getMuiTheme(lightBaseTheme)
 
 interface AppProps {
-  counts?: BarkCount[];
+  snippets?: Snippet[];
   maxVolume?: number;
 }
 
 @connect<AppProps>(
   (state, ownProps) => {
     return {
-      counts: state.default.barkcounts
+      snippets: state.default.barks
     };
   },
   (dispatch, ownProps) => {
@@ -56,15 +56,16 @@ class App extends React.Component<AppProps, {}> {
         <Paper style={{ margin: 'auto', width: 800 }}  >
           <Card style={{ height: 800 }} >
             <CardText style={{ margin: '25 25 0 10', paddingTop: 30, paddingRight: 0, width: 750 }}>
-              This is the volume bar. Volumes are relative to your device and the width of the bar will adjust so that the max is the loudest volume observed so far.
+              Please note: volumes are relative and will adapt. 100 just means the loudest thing ever heard.
             </CardText>
             <SoundVolumeText
               width={300}
               height={100}
               textColor={"black"}
               textFont={"100pt Calibri"}
-              decimals={3}
-              digits={1}
+              decimals={0}
+              digits={3}
+              relative={true}
               style={{
                 display: 'inline',
                 width: '90px',
@@ -100,10 +101,10 @@ class App extends React.Component<AppProps, {}> {
               <RaisedButton style={{ width: 130 }}>Share</RaisedButton>
             </div>
             <div style={{width: 595, display: 'inline-block'}}>
-              <SoundScale max={0.1} style={{
+              <SoundScale max={100} decimals={0} style={{
                 display: 'inline-block',
                 position: 'relative',
-                top: -127,
+                top: -120,
                 width: 595,
                 borderTop: '1px solid black'
               }} />
@@ -111,11 +112,11 @@ class App extends React.Component<AppProps, {}> {
 
             <List>
               {
-                this.props.counts.map((c, i) => {
+                 this.props.snippets && this.props.snippets.map((c, i) => {
                   return (
                     <ListItem key={i} >
                       <span style={{ paddingRight: 10 }}>{i}</span>
-                      {Math.round(c.volume * 1000000) / 1000000} at {c.timestamp.toLocaleTimeString()}
+                      {Math.round(c.triggerVolume * 1000000) / 1000000} at {new Date(c.startTime).toLocaleTimeString()}
                       {c.data &&
                         <audio controls>
                           <source src={c.data} />
@@ -151,3 +152,5 @@ if (module['hot']) {
   module['hot'].accept()
 }
 window['react'] = React;
+
+new InterleavingRecorder(5000, 0.1).initialize(store)
