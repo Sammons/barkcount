@@ -1,7 +1,6 @@
 import * as React from 'react';
 const RecordRTC = require('recordrtc');
 const subKey = 'bark_subscriptions'
-import { incrementCount } from '../redux/defaultStore';
 
 export class SoundService {
   static subscriberCounter = 0;

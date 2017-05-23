@@ -18,7 +18,7 @@ type Props = SnippetProps & SnippetDispatchers;
 
 @connect((state, ownProps) => {
   return {
-    snippets: state.default.barkcounts
+    snippets: state.default.barks
   };
 }, (dispatch, ownProps) => {
   return {};
